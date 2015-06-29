@@ -148,7 +148,7 @@ package Middleware::AddShitToResponse {
 
     sub call {
         my ($self, $req) = @_;
-        #warn join ", " => $self, grep { $_ ne 'application' } keys %$self;
+        warn join ", " => $self, grep { $_ ne 'application' } keys %$self;
         my $resp = $self->SUPER::call( $req );
         $resp->{$_} = $self->{$_} foreach grep { $_ ne 'application' } keys %$self;
         $resp;
