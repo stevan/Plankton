@@ -39,7 +39,7 @@ sub assemble {
             );
         }
         else {
-            die "WTF, this is not what I meant to do!";
+            die "[PANIC] WTF, this is not what I meant to do!";
         }
     }
 
