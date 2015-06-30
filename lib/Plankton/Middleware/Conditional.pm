@@ -5,12 +5,13 @@ use mro;
 
 use Plankton::Middleware;
 
-our @ISA = ('Plankton::Middleware');
-our %HAS = (
-    %Plankton::Middleware::HAS,        
-    conditional => sub { die 'The `conditional` key is required' },
-    middleware  => sub { die 'The `middleware` key is required'  },
-);
+our @ISA; BEGIN { @ISA = ('Plankton::Middleware') }
+our %HAS; BEGIN { %HAS = (
+        %Plankton::Middleware::HAS,        
+        conditional => sub { die 'The `conditional` key is required' },
+        middleware  => sub { die 'The `middleware` key is required'  },
+    );
+}
 
 sub call {
     my ($self, $req) = @_;

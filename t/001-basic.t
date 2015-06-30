@@ -14,8 +14,8 @@ package MyApp {
 
     use Plankton::Component;
 
-    our @ISA = ('Plankton::Component');
-    our %HAS = %Plankton::Component::HAS;
+    our @ISA; BEGIN { @ISA = ('Plankton::Component')   }
+    our %HAS; BEGIN { %HAS = %Plankton::Component::HAS }
 
     sub call { +{ test => 'WOOT!' } }
 }
@@ -26,8 +26,8 @@ package MyApp::AddShitToResponse {
 
     use Plankton::Middleware;
 
-    our @ISA = ('Plankton::Middleware');
-    our %HAS = %Plankton::Middleware::HAS;
+    our @ISA; BEGIN { @ISA = ('Plankton::Middleware')   }
+    our %HAS; BEGIN { %HAS = %Plankton::Middleware::HAS }
 
     sub call {
         my ($self, $req) = @_;

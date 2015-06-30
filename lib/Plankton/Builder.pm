@@ -6,11 +6,12 @@ use Plankton::Base;
 
 use Plankton::Middleware::Conditional;
 
-our @ISA = ('Plankton::Base');
-our %HAS = (
-    %Plankton::Base::HAS,        
-    middlewares => sub { [] },
-);
+our @ISA; BEGIN { @ISA = ('Plankton::Base') }
+our %HAS; BEGIN { %HAS = (
+        %Plankton::Base::HAS,        
+        middlewares => sub { [] },
+    );
+}
 
 sub add_middleware {
     my ($self, $mw, @args) = @_;

@@ -4,8 +4,8 @@ use warnings;
 
 use Plankton::Base;
 
-our @ISA = ('Plankton::Base');
-our %HAS = %Plankton::Base::HAS;
+our @ISA; BEGIN { @ISA = ('Plankton::Base')   }
+our %HAS; BEGIN { %HAS = %Plankton::Base::HAS }
 
 sub call;
 
