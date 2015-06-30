@@ -28,14 +28,14 @@ sub assemble {
     for my $spec ( reverse @{ $self->{middlewares} } ) {
         if ( scalar @$spec == 2 ) {
             my ($mw, $args) = @$spec;
-            $app = $mw->new( application => $app, @$args );
+            $app = $mw->new( app => $app, @$args );
         }
         elsif ( scalar @$spec == 3 ) {
             my ($cond, $mw, $args) = @$spec;  
             $app = Plankton::Middleware::Conditional->new( 
-                application => $app, 
+                app         => $app, 
                 conditional => $cond, 
-                middleware  => $mw->new( application => $app, @$args ) 
+                middleware  => $mw->new( app => $app, @$args ) 
             );
         }
         else {

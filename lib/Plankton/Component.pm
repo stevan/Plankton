@@ -5,16 +5,16 @@ use warnings;
 use Plankton::Base;
 
 our @ISA = ('Plankton::Base');
-our %HAS = (
-    %Plankton::Base::HAS,        
-    application => sub { die 'The `application` key is required' },
-);
+our %HAS = %Plankton::Base::HAS;
 
-sub call {
-    my ($self, $req) = @_;
-    return ref $self->{application} eq 'CODE'
-        ? $self->{application}->( $req )
-        : $self->{application}->call( $req );
+sub call;
+
+sub prepare_app { return }
+
+sub to_app {
+    my ($self) = @_;
+    $self->prepare_app;
+    return sub { $self->call( @_ ) };
 }
 
 1;

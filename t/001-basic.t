@@ -8,7 +8,19 @@ use Test::More;
 use Plankton::Component;
 use Plankton::Builder::DSL;
 
-package Plankton::Middleware::AddShitToResponse {
+package MyApp {
+    use strict;
+    use warnings;
+
+    use Plankton::Component;
+
+    our @ISA = ('Plankton::Component');
+    our %HAS = %Plankton::Component::HAS;
+
+    sub call { +{ test => 'WOOT!' } }
+}
+
+package MyApp::AddShitToResponse {
     use strict;
     use warnings;
 
@@ -28,16 +40,16 @@ package Plankton::Middleware::AddShitToResponse {
 
 my $app = application {
 
-    enable 'Plankton::Middleware::AddShitToResponse' => (bar => 10);
-    enable 'Plankton::Middleware::AddShitToResponse' => (
+    enable 'MyApp::AddShitToResponse' => (bar => 10);
+    enable 'MyApp::AddShitToResponse' => (
         baz   => 20,
         gorch => 30
     );
 
     enable_if sub { $_[0]->{hello} }, 
-        'Plankton::Middleware::AddShitToResponse' => (goodbye => 'cruel world');        
+        'MyApp::AddShitToResponse' => (goodbye => 'cruel world');        
 
-    Plankton::Component->new( application => sub { +{ test => 'WOOT!' } } );
+    MyApp->new;
 };
 
 subtest 'test it w/out conditional' => sub {
