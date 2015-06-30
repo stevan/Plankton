@@ -1,6 +1,7 @@
 package Plankton::Base;
 use strict;
 use warnings;
+use mro;
 
 our %HAS;
 

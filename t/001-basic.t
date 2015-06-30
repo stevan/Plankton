@@ -32,7 +32,7 @@ package MyApp::AddShitToResponse {
     sub call {
         my ($self, $req) = @_;
         #warn join ", " => $self, grep { $_ ne 'application' } keys %$self;
-        my $resp = $self->SUPER::call( $req );
+        my $resp = $self->next::method( $req );
         $resp->{$_} = $self->{$_} foreach grep { $_ ne 'application' } keys %$self;
         $resp;
     }

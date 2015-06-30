@@ -1,6 +1,7 @@
 package Plankton::Middleware::Conditional;
 use strict;
 use warnings;
+use mro;
 
 use Plankton::Middleware;
 
@@ -16,7 +17,7 @@ sub call {
     if ( $self->{conditional}->( $req ) ) {
         return $self->{middleware}->call( $req );
     } else {
-        return $self->SUPER::call( $req );            
+        return $self->next::method( $req );            
     }
 }
 
