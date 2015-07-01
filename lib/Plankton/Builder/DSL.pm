@@ -39,6 +39,7 @@ sub application (&) {
 
     my $app = $block->();
 
+    $builder->validate( $app );
     return $builder->assemble( $app );
 }
 
