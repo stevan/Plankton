@@ -4,8 +4,6 @@ use warnings;
 
 use Plankton::Base;
 
-use Plankton::Middleware::Conditional;
-
 our @ISA; BEGIN { @ISA = ('Plankton::Base') }
 our %HAS; BEGIN { %HAS = (
         %Plankton::Base::HAS,        
@@ -16,11 +14,6 @@ our %HAS; BEGIN { %HAS = (
 sub add_middleware {
     my ($self, $mw, @args) = @_;
     push @{ $self->{middlewares} } => [ $mw, \@args ];
-}
-
-sub add_middleware_if {
-    my ($self, $cond, $mw, @args) = @_;
-    push @{ $self->{middlewares} } => [ $cond, $mw, \@args ];
 }
 
 sub validate {
@@ -37,7 +30,7 @@ sub validate {
         my $spec = $all[ $i ];
         #warn Dumper $spec;
 
-        my $mw = (scalar @$spec == 2 ? $spec->[0] : (scalar @$spec == 3 ? $spec->[1] : die "WTF!"));
+        my $mw = $spec->[0];
 
         warn join '' => ('-' x 80), "\n";
         warn "... CHECKING: $mw\n";
@@ -54,7 +47,7 @@ sub validate {
                         my $has_been_fullfilled = 0;
                         for ( my $j = $i-1; $j >= 0; $j-- ) {
                             my $candidate    = $all[ $j ];
-                            my $candidate_mw = (scalar @$candidate == 2 ? $candidate->[0] : (scalar @$candidate == 3 ? $candidate->[1] : die "WTF!"));
+                            my $candidate_mw = $candidate->[0];
                             warn "................ Checking against items before it $candidate_mw (i($i) j($j))\n";
                             my $does         = do { no strict 'refs'; ${$candidate_mw . '::CONTRACT'}{does} };
                             foreach my $thing ( @$does ) {
@@ -84,7 +77,7 @@ sub validate {
                         my $has_been_fullfilled = 0;
                         for ( my $j = $i; $j < scalar @all; $j++ ) {
                             my $candidate    = $all[ $j ];
-                            my $candidate_mw = (scalar @$candidate == 2 ? $candidate->[0] : (scalar @$candidate == 3 ? $candidate->[1] : die "WTF!"));
+                            my $candidate_mw = $candidate->[0];
                             warn "................ Checking against items after it $candidate_mw (i($i) j($j))\n";
                             my $does         = do { no strict 'refs'; ${$candidate_mw . '::CONTRACT'}{does} };
                             foreach my $thing ( @$does ) {
@@ -123,14 +116,6 @@ sub assemble {
         if ( scalar @$spec == 2 ) {
             my ($mw, $args) = @$spec;
             $app = $mw->new( app => $app, @$args );
-        }
-        elsif ( scalar @$spec == 3 ) {
-            my ($cond, $mw, $args) = @$spec;  
-            $app = Plankton::Middleware::Conditional->new( 
-                app         => $app, 
-                conditional => $cond, 
-                middleware  => $mw->new( app => $app, @$args ) 
-            );
         }
         else {
             die "[PANIC] WTF, this is not what I meant to do!";

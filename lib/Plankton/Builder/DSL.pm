@@ -6,7 +6,6 @@ use Plankton::Builder;
 
 our @EXPORTS = qw[
     enable
-    enable_if
     application
 ];
 
@@ -23,10 +22,9 @@ sub import {
 
 our $BUILDER_CLASS = 'Plankton::Builder';
 
-our $ENABLE = our $ENABLE_IF = sub { die 'Can only call `enable` and `enable_if` within `application`'};
+our $ENABLE = sub { die 'Can only call `enable` within `application`'};
 
-sub enable    { $ENABLE->( @_ )    }
-sub enable_if { $ENABLE_IF->( @_ ) }
+sub enable { $ENABLE->( @_ ) }
 
 sub application (&) {
     my $block = shift;
@@ -34,8 +32,7 @@ sub application (&) {
     my $builder = $BUILDER_CLASS->new;
 
     no warnings 'redefine';
-    local $ENABLE    = sub { $builder->add_middleware( @_ )    };
-    local $ENABLE_IF = sub { $builder->add_middleware_if( @_ ) };
+    local $ENABLE    = sub { $builder->add_middleware( @_ ) };
 
     my $app = $block->();
 
