@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
+use Test::Fatal;
 
 use Plankton::Component;
 use Plankton::Builder::DSL;
@@ -22,10 +23,10 @@ package MyApp::ValidateRequest {
     }
 
     our %CONTRACT = (
-        does    => [ [ ValidatedRequest => undef ] ],
+        does    => [ [ 'ValidatedRequest' ] ],
         expects => {
             before => [],
-            after  => [ [ AddFieldToRequest => '__ID__' ] ],
+            after  => [ [ 'AddFieldToRequest', '__ID__' ] ],
         }
     );
 
@@ -47,9 +48,9 @@ package MyApp::AddIDToRequest {
     our %HAS; BEGIN { %HAS = %Plankton::Middleware::HAS }
 
     our %CONTRACT = (
-        does    => [ [ AddFieldToRequest => '__ID__' ] ],
+        does    => [ [ 'AddFieldToRequest', '__ID__' ] ],
         expects => {
-            before => [ [ ValidatedRequest => undef ] ],
+            before => [ [ 'ValidatedRequest' ] ],
             after  => [],
         }
     );
@@ -75,8 +76,8 @@ package MyApp {
         does    => [],
         expects => {
             before => [ 
-                [ ValidatedRequest  => undef ],
-                [ AddFieldToRequest => '__ID__' ],
+                [ 'ValidatedRequest' ],
+                [ 'AddFieldToRequest', '__ID__' ],
             ],
             after  => [],
         }
@@ -86,20 +87,19 @@ package MyApp {
 }
 
 
-my $app = application {
-
-    enable 'MyApp::ValidateRequest';
-    enable 'MyApp::AddIDToRequest';
-
-    MyApp->new;
-
-}->to_app;
-
 subtest '... test it' => sub {
-    my $resp = $app->( +{ hello => 'world' } );
+    my $app; 
+    is(exception {
+        $app = application {
+            enable 'MyApp::ValidateRequest';
+            enable 'MyApp::AddIDToRequest';
+            MyApp->new;
+        }->to_app;
+    }, undef, '... we did not die');
 
-    use Data::Dumper;
-    warn Dumper $resp;
+    is(exception {
+        my $resp = $app->( +{ hello => 'world' } );
+    }, undef, '... we did not die');
 };
 
 done_testing;
