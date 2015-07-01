@@ -50,10 +50,10 @@ my $app = application {
         'MyApp::AddShitToResponse' => (goodbye => 'cruel world');        
 
     MyApp->new;
-};
+}->to_app;
 
 subtest 'test it w/out conditional' => sub {
-    my $resp = $app->call( +{ hello => 0 } );
+    my $resp = $app->( +{ hello => 0 } );
 
     is($resp->{test},  'WOOT!', '... got the right value for `test`');
     is($resp->{bar},   10,      '... got the right value for `bar`');
@@ -62,9 +62,8 @@ subtest 'test it w/out conditional' => sub {
     ok(not(exists $resp->{goodbye}), '... our conditional did not fire');
 };
 
-
 subtest 'test it w/ conditional' => sub {
-    my $resp = $app->call( +{ hello => 1 } );
+    my $resp = $app->( +{ hello => 1 } );
 
     is($resp->{test},  'WOOT!', '... got the right value for `test`');
     is($resp->{bar},   10,      '... got the right value for `bar`');
