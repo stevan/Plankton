@@ -11,11 +11,6 @@ our %HAS; BEGIN { %HAS = (
     );
 }
 
-sub call {
-    my ($self, $req) = @_;
-    return $self->{app}->call( $req );
-}
-
 1;
 
 __END__
