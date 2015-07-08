@@ -21,8 +21,6 @@ sub add_middleware_if {
     push @{ $self->{middlewares} } => [ $cond, $mw, \@args ];
 }
 
-
-
 sub assemble {
     my ($self, $app) = @_;
 
