@@ -2,6 +2,10 @@ package Plankton::Builder;
 use strict;
 use warnings;
 
+use Plankton::Component;
+use Plankton::Middleware;
+use Plankton::Middleware::Conditional;
+
 use Plankton::Base;
 
 our @ISA; BEGIN { @ISA = ('Plankton::Base') }
