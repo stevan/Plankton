@@ -15,7 +15,7 @@ package MyApp::ValidateRequest {
 
     use Plankton::Middleware;
 
-    our @ISA; BEGIN { @ISA = ('Plankton::Middleware')   }
+    our @ISA; BEGIN { @ISA = ('Plankton::Middleware') }
     our %HAS; BEGIN { %HAS = (
             %Plankton::Middleware::HAS,
             error_handler => sub { return sub { die 'VALIDATING FAIL: ' . $_[2] } }
