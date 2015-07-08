@@ -5,7 +5,7 @@ use warnings;
 use Plankton::Builder;
 
 our @EXPORTS = qw[
-    enable
+    wrap
     application
 ];
 
@@ -17,14 +17,13 @@ sub import {
     foreach my $export ( @EXPORTS ) {
         *{ $to . '::' . $export } = \&{ $from . '::' . $export };
     }
-
 }
 
 our $BUILDER_CLASS = 'Plankton::Builder';
 
-our $ENABLE = sub { die 'Can only call `enable` within `application`'};
+our $WRAP = sub { die 'Can only call `wrap` within `application`'};
 
-sub enable { $ENABLE->( @_ ) }
+sub wrap { $WRAP->( @_ ) }
 
 sub application (&) {
     my $block = shift;
@@ -32,11 +31,10 @@ sub application (&) {
     my $builder = $BUILDER_CLASS->new;
 
     no warnings 'redefine';
-    local $ENABLE    = sub { $builder->add_middleware( @_ ) };
+    local $WRAP = sub { $builder->add_middleware( @_ ) };
 
     my $app = $block->();
-
-    $builder->validate( $app );
+     
     return $builder->assemble( $app );
 }
 
