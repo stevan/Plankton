@@ -16,6 +16,10 @@ sub add_middleware {
     push @{ $self->{middlewares} } => [ $mw, \@args ];
 }
 
+sub add_middleware_if {
+    my ($self, $cond, $mw, @args) = @_;
+    push @{ $self->{middlewares} } => [ $cond, $mw, \@args ];
+}
 
 
 
@@ -27,6 +31,14 @@ sub assemble {
             my ($mw, $args) = @$spec;
             $app = $mw->new( app => $app, @$args );
             $app->prepare_app;
+        }
+        elsif ( scalar @$spec == 3 ) {
+            my ($cond, $mw, $args) = @$spec;  
+            $app = Plankton::Middleware::Conditional->new( 
+                app         => $app, 
+                conditional => $cond, 
+                middleware  => $mw->new( app => $app, @$args ) 
+            );
         }
         else {
             die "[PANIC] WTF, this is not what I meant to do!";
