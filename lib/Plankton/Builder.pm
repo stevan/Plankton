@@ -36,10 +36,14 @@ sub assemble {
         }
         elsif ( scalar @$spec == 3 ) {
             my ($cond, $mw, $args) = @$spec;  
+
+            my $sub_app = $mw->new( app => $app, @$args );
+            $sub_app->prepare_app;
+
             $app = Plankton::Middleware::Conditional->new( 
                 app        => $app, 
                 condition  => $cond, 
-                middleware => $mw->new( app => $app, @$args ) 
+                middleware => $sub_app,
             );
         }
         else {
