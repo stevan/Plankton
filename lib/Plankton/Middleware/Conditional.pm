@@ -7,21 +7,15 @@ use Plankton::Middleware;
 our @ISA; BEGIN { @ISA = ('Plankton::Middleware') }
 our %HAS; BEGIN { %HAS = (
         %Plankton::Middleware::HAS,        
-        conditional => sub { die 'The `conditional` key is required' },
-        middleware  => sub { die 'The `middleware` key is required'  },
+        condition  => sub { die 'The `condition` key is required' },
+        middleware => sub { die 'The `middleware` key is required'  },
     );
 }
 
 sub call {
     my ($self, $req) = @_;
-
-    # if we meet this condition, diverge ...
-    if ( $self->{conditional}->( $req ) ) {
-        return $self->{middleware}->call( $req );
-    }
-
-    # go about our normal lives ...
-    return $self->{app}->call( $req );
+    my $app = $self->{condition}->( $req ) ? $self->{middleware} : $self->{app};
+    return $app->call( $req );
 }
 
 1;
