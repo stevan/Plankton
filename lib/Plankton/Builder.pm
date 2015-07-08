@@ -128,6 +128,7 @@ sub assemble {
         if ( scalar @$spec == 2 ) {
             my ($mw, $args) = @$spec;
             $app = $mw->new( app => $app, @$args );
+            $app->prepare_app;
         }
         else {
             die "[PANIC] WTF, this is not what I meant to do!";
