@@ -24,8 +24,8 @@ our $BUILDER_CLASS = 'Plankton::Builder';
 
 our $WRAP = our $WRAP_IF = sub { die 'Can only call `wrap` and `wrap_if` from within `application`'};
 
-sub wrap    { $WRAP->( @_ ) }
-sub wrap_if { $WRAP_IF->( @_ ) }
+sub wrap    ($@)  { $WRAP->( @_ ) }
+sub wrap_if (&$@) { $WRAP_IF->( @_ ) }
 
 sub application (&) {
     my $block = shift;

@@ -46,7 +46,7 @@ my $app = application {
         gorch => 30
     );
 
-    wrap_if sub { $_[0]->{hello} }, 
+    wrap_if { $_[0]->{hello} } 
         'MyApp::AddShitToResponse' => (goodbye => 'cruel world');        
 
     MyApp->new;
