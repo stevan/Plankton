@@ -11,7 +11,7 @@ sub new {
     my %proto = do { no strict 'refs'; %{$class . '::HAS'} };
     foreach my $k ( keys %proto ) {
         $self->{ $k } = $proto{ $k }->( $self ) 
-            unless exists $args{ $k };
+            unless exists $self->{ $k };
     }
     return bless $self => $class;
 }
