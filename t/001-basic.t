@@ -31,9 +31,8 @@ package MyApp::AddShitToResponse {
 
     sub call {
         my ($self, $req) = @_;
-        #warn join ", " => $self, grep { $_ ne 'application' } keys %$self;
         my $resp = $self->{app}->call( $req );
-        $resp->{$_} = $self->{$_} foreach grep { $_ ne 'application' } keys %$self;
+        $resp->{$_} = $self->{$_} foreach grep { $_ ne 'app' } keys %$self;
         $resp;
     }
 }
