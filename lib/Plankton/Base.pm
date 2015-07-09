@@ -8,13 +8,14 @@ our %HAS;
 sub new {
     my ($class, %args) = @_;
 
-    my $self  = \%args;
+    my $proto = \%args;        
+    my $self  = {};    
     my %slots = do { no strict 'refs'; %{$class . '::HAS'} };
 
-    foreach my $k ( keys %slots ) {    
-        $self->{ $k } = $slots{ $k }->( $self )
-            unless exists $self->{ $k };
-    }
+    $self->{ $_ } = exists $proto->{ $_ } 
+        ? $proto->{ $_ } 
+        : $slots{ $_ }->( $proto )
+            foreach keys %slots;
 
     return bless $self => $class;
 }

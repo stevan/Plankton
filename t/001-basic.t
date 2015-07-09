@@ -26,13 +26,26 @@ package MyApp::AddShitToResponse {
 
     use Plankton::Middleware;
 
-    our @ISA; BEGIN { @ISA = ('Plankton::Middleware')   }
-    our %HAS; BEGIN { %HAS = %Plankton::Middleware::HAS }
+    our (@ISA, %HAS); 
+    BEGIN { 
+        @ISA = ('Plankton::Middleware');
+        %HAS = (
+            %Plankton::Middleware::HAS,
+            # list the possible slots we might 
+            # have, see the test cases below
+            bar     => sub { undef },
+            baz     => sub { undef },
+            gorch   => sub { undef },
+            goodbye => sub { undef },
+        )
+    }
 
     sub call {
         my ($self, $req) = @_;
         my $resp = $self->{app}->call( $req );
-        $resp->{$_} = $self->{$_} foreach grep { $_ ne 'app' } keys %$self;
+        foreach my $k (qw[ bar baz gorch goodbye ]) { # only copy these slots 
+            $resp->{$k} = $self->{$k} if $self->{$k}; # if they are available
+        }
         $resp;
     }
 }
